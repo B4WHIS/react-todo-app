@@ -1,10 +1,12 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 import "./App.css";
 
 function App() {
   const [value, setValue] = useState("");
   const [toDo, setTodo] = useState([]);
+  const [editValue, seteditValue] = useState("");
+  const [editIndex, seteditIndex] = useState(null);
 
   function handleAdd() {
     if (value === "") {
@@ -19,6 +21,30 @@ function App() {
     setTodo(toDo.filter((item, i) => i !== index));
   }
 
+  function handleEdit(editIndex, editValue) {
+    seteditIndex(editIndex);
+    seteditValue(editValue);
+  }
+
+  function handleSave() {
+    setTodo(
+      toDo.map((item, index) => {
+        if (index === editIndex) {
+          return editValue;
+        } else {
+          return item;
+        }
+      }),
+    );
+    seteditIndex(null);
+    seteditValue("");
+  }
+
+  function handleCancel() {
+    seteditValue("");
+    seteditIndex(null);
+  }
+
   return (
     <div>
       <h1>To do app</h1>
@@ -30,12 +56,27 @@ function App() {
       />
       <button onClick={handleAdd}>Them</button>
 
-      {toDo.map((item, index) => (
-        <p key={index}>
-          {item}
-          <button onClick={() => handleDelete(index)}>xoa</button>
-        </p>
-      ))}
+      {toDo.map((item, index) =>
+        editIndex === index ? (
+          <React.Fragment key={index}>
+            <input
+              type="text"
+              value={editValue}
+              onChange={(e) => seteditValue(e.target.value)}
+            />
+            <button onClick={() => handleCancel()}>Hủy</button>
+            <button onClick={handleSave}>Lưu</button>
+          </React.Fragment>
+        ) : (
+          <>
+            <p key={index}>
+              {item}
+              <button onClick={() => handleEdit(index, item)}>Sửa</button>
+              <button onClick={() => handleDelete(index)}>Xóa</button>
+            </p>
+          </>
+        ),
+      )}
     </div>
   );
 }
