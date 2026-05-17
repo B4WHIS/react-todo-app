@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import "./App.css";
 
@@ -7,7 +7,18 @@ function App() {
   const [toDo, setTodo] = useState([]);
   const [editValue, seteditValue] = useState("");
   const [editIndex, seteditIndex] = useState(null);
+  const [loaded, setLoaded] = useState(false);
 
+  useEffect(() => {
+    if (loaded === true) localStorage.setItem("todos", JSON.stringify(toDo));
+  }, [toDo]);
+
+  useEffect(() => {
+    const data = localStorage.getItem("todos");
+    const dataTodo = JSON.parse(data);
+    setTodo(dataTodo);
+    setLoaded(true);
+  }, []);
   function handleAdd() {
     if (value === "") {
       alert("Khong duoc rong");
