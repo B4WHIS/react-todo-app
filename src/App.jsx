@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import "./App.css";
 import TodoItem from "./TodoItem";
@@ -21,25 +21,29 @@ function App() {
     setTodo(dataTodo);
     setLoaded(true);
   }, []);
-  function handleAdd() {
+
+  const handleAdd = useCallback(() => {
     if (value === "") {
       alert("Khong duoc rong");
     } else {
       setTodo([...toDo, value]);
       setValue("");
     }
-  }
+  }, [toDo, value]);
 
-  function handleDelete(index) {
-    setTodo(toDo.filter((item, i) => i !== index));
-  }
+  const handleDelete = useCallback(
+    (index) => {
+      setTodo(toDo.filter((item, i) => i !== index));
+    },
+    [toDo],
+  );
 
   function handleEdit(editIndex, editValue) {
     seteditIndex(editIndex);
     seteditValue(editValue);
   }
 
-  function handleSave() {
+  const handleSave = useCallback(() => {
     setTodo(
       toDo.map((item, index) => {
         if (index === editIndex) {
@@ -51,7 +55,7 @@ function App() {
     );
     seteditIndex(null);
     seteditValue("");
-  }
+  }, [toDo, editIndex, editValue]);
 
   function handleCancel() {
     seteditValue("");
