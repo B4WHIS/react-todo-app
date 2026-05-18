@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import "./App.css";
 import TodoItem from "./TodoItem";
+import TodoInput from "./TodoInput";
 
 function App() {
   const [value, setValue] = useState("");
@@ -61,12 +62,7 @@ function App() {
     <div>
       <h1>To do app</h1>
 
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-      />
-      <button onClick={handleAdd}>Them</button>
+      <TodoInput value={value} setValue={setValue} onAdd={handleAdd} />
 
       {toDo.map((item, index) => (
         <TodoItem
