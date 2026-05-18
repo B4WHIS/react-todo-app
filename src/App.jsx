@@ -1,26 +1,16 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import "./App.css";
 import TodoItem from "./TodoItem";
 import TodoInput from "./TodoInput";
+import useLocalStorage from "./useLocalStorage";
 
 function App() {
   const [value, setValue] = useState("");
-  const [toDo, setTodo] = useState([]);
+  const [toDo, setTodo] = useLocalStorage("todos", []);
   const [editValue, seteditValue] = useState("");
   const [editIndex, seteditIndex] = useState(null);
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    if (loaded === true) localStorage.setItem("todos", JSON.stringify(toDo));
-  }, [toDo]);
-
-  useEffect(() => {
-    const data = localStorage.getItem("todos");
-    const dataTodo = JSON.parse(data);
-    setTodo(dataTodo);
-    setLoaded(true);
-  }, []);
+  // const [loaded, setLoaded] = useState(false);
 
   const handleAdd = useCallback(() => {
     if (value === "") {
@@ -56,7 +46,6 @@ function App() {
     seteditIndex(null);
     seteditValue("");
   }, [toDo, editIndex, editValue]);
-
   function handleCancel() {
     seteditValue("");
     seteditIndex(null);
