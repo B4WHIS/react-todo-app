@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./App.css";
+import TodoItem from "./TodoItem";
 
 function App() {
   const [value, setValue] = useState("");
@@ -67,27 +68,20 @@ function App() {
       />
       <button onClick={handleAdd}>Them</button>
 
-      {toDo.map((item, index) =>
-        editIndex === index ? (
-          <React.Fragment key={index}>
-            <input
-              type="text"
-              value={editValue}
-              onChange={(e) => seteditValue(e.target.value)}
-            />
-            <button onClick={() => handleCancel()}>Hủy</button>
-            <button onClick={handleSave}>Lưu</button>
-          </React.Fragment>
-        ) : (
-          <>
-            <p key={index}>
-              {item}
-              <button onClick={() => handleEdit(index, item)}>Sửa</button>
-              <button onClick={() => handleDelete(index)}>Xóa</button>
-            </p>
-          </>
-        ),
-      )}
+      {toDo.map((item, index) => (
+        <TodoItem
+          key={index}
+          item={item}
+          index={index}
+          editIndex={editIndex}
+          editValue={editValue}
+          onCancel={handleCancel}
+          onDelete={() => handleDelete(index)}
+          onSave={handleSave}
+          onEdit={() => handleEdit(index, item)}
+          onEditChange={seteditValue}
+        />
+      ))}
     </div>
   );
 }
