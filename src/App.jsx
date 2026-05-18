@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import "./App.css";
 import TodoItem from "./TodoItem";
@@ -62,10 +62,14 @@ function App() {
     seteditIndex(null);
   }
 
+  const countTodo = useMemo(() => {
+    return toDo.length;
+  }, [toDo]);
+
   return (
     <div>
       <h1>To do app</h1>
-
+      <p>Số todo: {countTodo}</p>
       <TodoInput value={value} setValue={setValue} onAdd={handleAdd} />
 
       {toDo.map((item, index) => (
