@@ -4,6 +4,7 @@ import "./App.css";
 import TodoItem from "./TodoItem";
 import TodoInput from "./TodoInput";
 import toDoReducer from "./TodoReducer";
+import TodoContext from "./TodoContext";
 
 function App() {
   const [value, setValue] = useState("");
@@ -33,37 +34,34 @@ function App() {
   }, [toDo]);
 
   return (
-    <div>
-      <h1>To do app</h1>
-      <p>Số todo: {countTodo}</p>
-      <TodoInput
-        value={value}
-        setValue={setValue}
-        onAdd={() => {
-          if (value === "") return alert("Không được rỗng");
-          dispatch({ type: "ADD", payload: value });
-          setValue("");
-        }}
-      />
-
-      {toDo.map((item, index) => (
-        <TodoItem
-          key={index}
-          item={item}
-          index={index}
-          editIndex={editIndex}
-          editValue={editValue}
-          onCancel={handleCancel}
-          onDelete={() => dispatch({ type: "DELETE", payload: { index } })}
-          onSave={() => {
-            dispatch({ type: "SAVE", payload: { editIndex, editValue } });
-            handleCancel();
+    <TodoContext.Provider
+      value={{
+        editIndex,
+        editValue,
+        seteditValue,
+        handleEdit,
+        handleCancel,
+        dispatch,
+      }}
+    >
+      <div>
+        <h1>To do app</h1>
+        <p>Số todo: {countTodo}</p>
+        <TodoInput
+          value={value}
+          setValue={setValue}
+          onAdd={() => {
+            if (value === "") return alert("Không được rỗng");
+            dispatch({ type: "ADD", payload: value });
+            setValue("");
           }}
-          onEdit={() => handleEdit(index, item)}
-          onEditChange={seteditValue}
         />
-      ))}
-    </div>
+
+        {toDo.map((item, index) => (
+          <TodoItem key={index} item={item} index={index} />
+        ))}
+      </div>
+    </TodoContext.Provider>
   );
 }
 

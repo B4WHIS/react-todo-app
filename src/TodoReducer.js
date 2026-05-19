@@ -11,6 +11,8 @@ function toDoReducer(state, action) {
           ? action.payload.editValue
           : item;
       });
+    default:
+      return state;
   }
 }
 

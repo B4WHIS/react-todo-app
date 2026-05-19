@@ -1,14 +1,15 @@
-function TodoItem({
-  item,
-  index,
-  editIndex,
-  editValue,
-  onEdit,
-  onDelete,
-  onSave,
-  onCancel,
-  onEditChange,
-}) {
+import { useContext } from "react";
+import TodoContext from "./TodoContext";
+
+function TodoItem({ item, index }) {
+  const {
+    editIndex,
+    editValue,
+    seteditValue,
+    handleEdit,
+    handleCancel,
+    dispatch,
+  } = useContext(TodoContext);
   return (
     <>
       {editIndex === index ? (
@@ -16,17 +17,30 @@ function TodoItem({
           <input
             type="text"
             value={editValue}
-            onChange={(e) => onEditChange(e.target.value)}
+            onChange={(e) => seteditValue(e.target.value)}
           />
-          <button onClick={onSave}>Lưu</button>
-          <button onClick={onCancel}>Hủy</button>
+          <button
+            onClick={() => {
+              dispatch({ type: "SAVE", payload: { editIndex, editValue } });
+              handleCancel();
+            }}
+          >
+            Lưu
+          </button>
+          <button onClick={handleCancel}>Hủy</button>
         </div>
       ) : (
         <>
           <p key={index}>
             {item}
-            <button onClick={onEdit}>Sửa</button>
-            <button onClick={onDelete}>Xóa</button>
+            <button onClick={() => handleEdit(index, item)}>Sửa</button>
+            <button
+              onClick={() => {
+                dispatch({ type: "DELETE", payload: { index } });
+              }}
+            >
+              Xóa
+            </button>
           </p>
         </>
       )}
