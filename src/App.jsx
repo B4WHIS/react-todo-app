@@ -1,51 +1,28 @@
-import { useCallback, useMemo, useState } from "react";
+import { useEffect, useMemo, useReducer, useState } from "react";
 
 import "./App.css";
 import TodoItem from "./TodoItem";
 import TodoInput from "./TodoInput";
-import useLocalStorage from "./useLocalStorage";
+import toDoReducer from "./TodoReducer";
 
 function App() {
   const [value, setValue] = useState("");
-  const [toDo, setTodo] = useLocalStorage("todos", []);
+  const [toDo, dispatch] = useReducer(
+    toDoReducer,
+    JSON.parse(localStorage.getItem("todos")) || [],
+  );
   const [editValue, seteditValue] = useState("");
   const [editIndex, seteditIndex] = useState(null);
-  // const [loaded, setLoaded] = useState(false);
 
-  const handleAdd = useCallback(() => {
-    if (value === "") {
-      alert("Khong duoc rong");
-    } else {
-      setTodo([...toDo, value]);
-      setValue("");
-    }
-  }, [toDo, value]);
-
-  const handleDelete = useCallback(
-    (index) => {
-      setTodo(toDo.filter((item, i) => i !== index));
-    },
-    [toDo],
-  );
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(toDo));
+  }, [toDo]);
 
   function handleEdit(editIndex, editValue) {
     seteditIndex(editIndex);
     seteditValue(editValue);
   }
 
-  const handleSave = useCallback(() => {
-    setTodo(
-      toDo.map((item, index) => {
-        if (index === editIndex) {
-          return editValue;
-        } else {
-          return item;
-        }
-      }),
-    );
-    seteditIndex(null);
-    seteditValue("");
-  }, [toDo, editIndex, editValue]);
   function handleCancel() {
     seteditValue("");
     seteditIndex(null);
@@ -59,7 +36,15 @@ function App() {
     <div>
       <h1>To do app</h1>
       <p>Số todo: {countTodo}</p>
-      <TodoInput value={value} setValue={setValue} onAdd={handleAdd} />
+      <TodoInput
+        value={value}
+        setValue={setValue}
+        onAdd={() => {
+          if (value === "") return alert("Không được rỗng");
+          dispatch({ type: "ADD", payload: value });
+          setValue("");
+        }}
+      />
 
       {toDo.map((item, index) => (
         <TodoItem
@@ -69,8 +54,11 @@ function App() {
           editIndex={editIndex}
           editValue={editValue}
           onCancel={handleCancel}
-          onDelete={() => handleDelete(index)}
-          onSave={handleSave}
+          onDelete={() => dispatch({ type: "DELETE", payload: { index } })}
+          onSave={() => {
+            dispatch({ type: "SAVE", payload: { editIndex, editValue } });
+            handleCancel();
+          }}
           onEdit={() => handleEdit(index, item)}
           onEditChange={seteditValue}
         />
