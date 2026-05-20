@@ -16,8 +16,12 @@ function App() {
   const [editIndex, seteditIndex] = useState(null);
 
   useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(toDo));
-  }, [toDo]);
+    fetch("https://jsonplaceholder.typicode.com/todos").then((res) =>
+      res
+        .json()
+        .then((data) => dispatch({ type: "SET", payload: data.slice(0, 10) })),
+    );
+  }, []);
 
   function handleEdit(editIndex, editValue) {
     seteditIndex(editIndex);

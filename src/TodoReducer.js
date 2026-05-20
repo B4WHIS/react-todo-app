@@ -11,6 +11,8 @@ function toDoReducer(state, action) {
           ? action.payload.editValue
           : item;
       });
+    case "SET":
+      return action.payload;
     default:
       return state;
   }

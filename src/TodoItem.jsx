@@ -32,7 +32,7 @@ function TodoItem({ item, index }) {
       ) : (
         <>
           <p key={index}>
-            {item}
+            {item.title}
             <button onClick={() => handleEdit(index, item)}>Sửa</button>
             <button
               onClick={() => {
