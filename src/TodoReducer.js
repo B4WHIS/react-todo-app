@@ -8,7 +8,7 @@ function toDoReducer(state, action) {
       console.log(action.payload);
       return state.map((item, index) => {
         return index === action.payload.editIndex
-          ? action.payload.editValue
+          ? { ...item, title: action.payload.editValue }
           : item;
       });
     case "SET":

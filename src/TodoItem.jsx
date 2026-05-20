@@ -1,5 +1,7 @@
 import { useContext } from "react";
 import TodoContext from "./TodoContext";
+import API from "./Api";
+import axios from "axios";
 
 function TodoItem({ item, index }) {
   const {
@@ -21,8 +23,10 @@ function TodoItem({ item, index }) {
           />
           <button
             onClick={() => {
-              dispatch({ type: "SAVE", payload: { editIndex, editValue } });
-              handleCancel();
+              axios.put(`${API}/${item.id}`, { title: editValue }).then(() => {
+                dispatch({ type: "SAVE", payload: { editIndex, editValue } });
+                handleCancel();
+              });
             }}
           >
             Lưu
@@ -36,7 +40,9 @@ function TodoItem({ item, index }) {
             <button onClick={() => handleEdit(index, item)}>Sửa</button>
             <button
               onClick={() => {
-                dispatch({ type: "DELETE", payload: { index } });
+                axios
+                  .delete(`${API}/${item.id}`)
+                  .then(() => dispatch({ type: "DELETE", payload: { index } }));
               }}
             >
               Xóa

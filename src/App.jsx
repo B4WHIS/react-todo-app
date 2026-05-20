@@ -5,6 +5,8 @@ import TodoItem from "./TodoItem";
 import TodoInput from "./TodoInput";
 import toDoReducer from "./TodoReducer";
 import TodoContext from "./TodoContext";
+import axios from "axios";
+import API from "./Api";
 
 function App() {
   const [value, setValue] = useState("");
@@ -16,16 +18,12 @@ function App() {
   const [editIndex, seteditIndex] = useState(null);
 
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/todos").then((res) =>
-      res
-        .json()
-        .then((data) => dispatch({ type: "SET", payload: data.slice(0, 10) })),
-    );
+    axios.get(API).then((res) => dispatch({ type: "SET", payload: res.data }));
   }, []);
 
-  function handleEdit(editIndex, editValue) {
-    seteditIndex(editIndex);
-    seteditValue(editValue);
+  function handleEdit(index, item) {
+    seteditIndex(index);
+    seteditValue(item.title);
   }
 
   function handleCancel() {
@@ -56,7 +54,10 @@ function App() {
           setValue={setValue}
           onAdd={() => {
             if (value === "") return alert("Không được rỗng");
-            dispatch({ type: "ADD", payload: value });
+            axios
+              .post(API, { title: value, completed: false })
+              .then((res) => dispatch({ type: "ADD", payload: res.data }));
+
             setValue("");
           }}
         />
