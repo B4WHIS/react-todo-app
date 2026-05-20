@@ -5,7 +5,6 @@ function toDoReducer(state, action) {
     case "DELETE":
       return state.filter((item, i) => i !== action.payload.index);
     case "SAVE":
-      console.log(action.payload);
       return state.map((item, index) => {
         return index === action.payload.editIndex
           ? { ...item, title: action.payload.editValue }

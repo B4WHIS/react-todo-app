@@ -2,6 +2,7 @@ import { useContext } from "react";
 import TodoContext from "./TodoContext";
 import API from "./Api";
 import axios from "axios";
+import { deleteTodo, saveTodo } from "./store/todoSlice";
 
 function TodoItem({ item, index }) {
   const {
@@ -24,7 +25,7 @@ function TodoItem({ item, index }) {
           <button
             onClick={() => {
               axios.put(`${API}/${item.id}`, { title: editValue }).then(() => {
-                dispatch({ type: "SAVE", payload: { editIndex, editValue } });
+                dispatch(saveTodo({ editIndex, editValue }));
                 handleCancel();
               });
             }}
@@ -42,7 +43,7 @@ function TodoItem({ item, index }) {
               onClick={() => {
                 axios
                   .delete(`${API}/${item.id}`)
-                  .then(() => dispatch({ type: "DELETE", payload: { index } }));
+                  .then(() => dispatch(deleteTodo({ index })));
               }}
             >
               Xóa

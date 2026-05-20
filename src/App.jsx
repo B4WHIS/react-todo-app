@@ -1,24 +1,23 @@
-import { useEffect, useMemo, useReducer, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import "./App.css";
 import TodoItem from "./TodoItem";
 import TodoInput from "./TodoInput";
-import toDoReducer from "./TodoReducer";
 import TodoContext from "./TodoContext";
 import axios from "axios";
 import API from "./Api";
+import { useDispatch, useSelector } from "react-redux";
+import { addTodo, setTodo } from "./store/todoSlice";
 
 function App() {
   const [value, setValue] = useState("");
-  const [toDo, dispatch] = useReducer(
-    toDoReducer,
-    JSON.parse(localStorage.getItem("todos")) || [],
-  );
+  const toDo = useSelector((state) => state.todos);
+  const dispatch = useDispatch();
   const [editValue, seteditValue] = useState("");
   const [editIndex, seteditIndex] = useState(null);
 
   useEffect(() => {
-    axios.get(API).then((res) => dispatch({ type: "SET", payload: res.data }));
+    axios.get(API).then((res) => dispatch(setTodo(res.data)));
   }, []);
 
   function handleEdit(index, item) {
@@ -56,7 +55,7 @@ function App() {
             if (value === "") return alert("Không được rỗng");
             axios
               .post(API, { title: value, completed: false })
-              .then((res) => dispatch({ type: "ADD", payload: res.data }));
+              .then((res) => dispatch(addTodo(res.data)));
 
             setValue("");
           }}
