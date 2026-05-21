@@ -9,6 +9,7 @@ import API from "./Api";
 import { useDispatch, useSelector } from "react-redux";
 import { addTodo, setTodo } from "./store/todoSlice";
 
+// 
 function App() {
   const [value, setValue] = useState("");
   const toDo = useSelector((state) => state.todos);
